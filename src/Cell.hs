@@ -18,28 +18,54 @@ makeTorus (maxX, maxY) (x, y) = (x `mod` maxX, y `mod` maxY)
 adjacentLocations :: (Int, Int) -> (Int, Int) -> [(Int, Int)]
 adjacentLocations bounds (x, y) = makeTorus bounds <$> [(x+1, y), (x-1, y), (x, y+1), (x, y-1), (x+1, y+1), (x-1, y-1), (x+1, y-1), (x-1, y+1)]
 
-adjacentCells :: (Int, Int) -> (Int, Int) -> Grid -> [Maybe Cell]
-adjacentCells bounds loc grid = flipLookup grid <$> adjacentLocations bounds loc 
+adjacentCells :: (Int, Int) -> Grid -> (Int, Int) -> [Maybe Cell]
+adjacentCells bounds grid loc = flipLookup grid <$> adjacentLocations bounds loc 
   where 
     flipLookup = flip Map.lookup
  
 -- Get count of live cells adjacent to the location passed in
-liveNeighbors :: (Int, Int) -> (Int, Int) -> Grid -> Int
-liveNeighbors bounds loc grid = length $ filter (\case Just Alive -> True 
-                                                       _          -> False) $ adjacentCells bounds loc grid 
+liveNeighbors :: (Int, Int) -> Grid -> (Int, Int) -> Int
+liveNeighbors bounds grid loc = length $ filter (\case Just Alive -> True 
+                                                       _          -> False) $ adjacentCells bounds grid loc 
 
 -- Get count of dead cells adjacent to the location passed in
-deadNeighbors :: (Int, Int) -> (Int, Int) -> Grid -> Int
-deadNeighbors bounds loc grid = length $ filter (\case Just Dead -> True 
-                                                       _         -> False) $ adjacentCells bounds loc grid
+deadNeighbors :: (Int, Int) -> Grid -> (Int, Int) -> Int
+deadNeighbors bounds grid loc = length $ filter (\case Just Dead -> True 
+                                                       _         -> False) $ adjacentCells bounds grid loc
+                     
+-- Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+-- Any live cell with two or three live neighbours lives on to the next generation.
+-- Any live cell with more than three live neighbours dies, as if by overpopulation.
+-- Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.    
+  
+updateLiveCell :: (Int, Int) -> Grid -> (Int, Int) -> Cell -> Cell
+updateLiveCell bounds grid loc cell = case cell of
+                                   Alive -> if liveCount == 2 || liveCount == 3 then
+                                              cell 
+                                            else
+                                              Dead                                                        
+                                   Dead  -> cell
+  where
+    liveCount = liveNeighbors bounds grid loc  
+                
+updateDeadCell :: (Int, Int) -> Grid -> (Int, Int) -> Cell -> Cell 
+updateDeadCell bounds grid loc cell = case cell of   
+                                        Dead  -> if liveCount == 3 then
+                                                   Alive
+                                                 else 
+                                                   cell  
+                                        Alive -> cell 
+  where
+    liveCount = liveNeighbors bounds grid loc  
+                                                 
 -- updates a cell's state based on the cells around it
-updateCell :: (Int, Int) -> (Int, Int) -> Grid -> Grid
-updateCell bounds loc grid = case Map.lookup loc grid of
-                               Nothing    -> grid
-                               Just Alive -> grid -- needs change 
-                               Just Dead  -> grid -- needs change
+updateCell :: (Int, Int) -> Grid -> (Int, Int) -> Cell -> Cell
+updateCell bounds grid loc cell = case cell of
+                                    Alive -> updateLiveCell bounds grid loc cell 
+                                    Dead  -> updateDeadCell bounds grid loc cell
 
--- Updates the grid
+-- mapWithKey :: (k -> a -> b) -> Map k a -> Map k b
+-- Updates the grid 
 tick :: (Int, Int) -> Grid -> Grid
-tick = undefined
+tick bounds grid = Map.mapWithKey (updateCell bounds grid) grid
 
