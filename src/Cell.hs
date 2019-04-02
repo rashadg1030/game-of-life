@@ -8,6 +8,8 @@ data Cell = Alive | Dead
 
 type Grid = Map.Map (Int, Int) Cell
 
+-- Could use ReaderT
+
 -- Grid with only dead Cells
 deadGrid :: (Int, Int) -> Grid
 deadGrid (maxX, maxY) = Map.fromList [((x, y), Dead) | x <- [0..(maxX - 1)], y <- [0..(maxY - 1)]]  

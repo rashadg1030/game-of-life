@@ -14,7 +14,7 @@ classic = Classic
     { title = "Game of Life"
     , rows = sides
     , cols = sides
-    , tilePixelSize = 16
+    , tilePixelSize = 8
     , backgroundColor = Black2
     , setupFn = return $ C.rPen (sides, sides)
     , updateFn = update
@@ -25,7 +25,7 @@ classic = Classic
     }
 
 sides :: Int
-sides = 64
+sides = 128
 
 update :: Input -> C.Grid -> IO C.Grid
 update _ grid = return $ C.tick (sides, sides) grid  
