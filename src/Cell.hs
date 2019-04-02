@@ -12,6 +12,12 @@ type Grid = Map.Map (Int, Int) Cell
 deadGrid :: (Int, Int) -> Grid
 deadGrid (maxX, maxY) = Map.fromList [((x, y), Dead) | x <- [0..(maxX - 1)], y <- [0..(maxY - 1)]]  
 
+rPen :: (Int, Int) -> Grid
+rPen bounds = (Map.fromList [((20,20), Alive), ((19,20), Alive), ((20, 21), Alive), ((20, 19), Alive), ((21,21), Alive)]) `Map.union` deadGrid bounds 
+
+block :: (Int, Int) -> Grid
+block bounds = (Map.fromList [((10,10), Alive), ((11,11), Alive), ((10, 11), Alive), ((11, 10), Alive)]) `Map.union` deadGrid bounds 
+
 makeTorus :: (Int, Int) -> (Int, Int) -> (Int, Int)
 makeTorus (maxX, maxY) (x, y) = (x `mod` maxX, y `mod` maxY)
 
