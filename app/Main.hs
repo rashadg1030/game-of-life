@@ -3,7 +3,6 @@
 
 module Main where
 
-import Lib
 import GridProto.Classic
 import GridProto.Core
 import qualified Cell as C
@@ -72,7 +71,7 @@ cellToTile C.Alive  = Tile Nothing Nothing (Just wh0)
 cellToTile C.Dead   = Tile Nothing Nothing Nothing
 
 tileMap :: GameState -> Map (Int, Int) Tile
-tileMap gameState@GameState{..} = case isPlaying of 
+tileMap GameState{..} = case isPlaying of 
   True  -> tileGrid  
   False -> mergeTiles tileGrid cursorGrid 
   where 
