@@ -4,6 +4,8 @@ Play conway's Game Life.
 
 ## Prerequisites
 
+Must have `stack` installed
+
 ## Getting Started
 
 1. Clone the repository
