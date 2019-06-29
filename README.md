@@ -6,7 +6,15 @@ Play conway's Game Life.
 
 Must have `stack` installed
 
-Must have `sdl2-dev` installed
+Run the command `curl -sSL https://get.haskellstack.org/ | sh` to install it
+
+Must have `libsdl2-dev` installed
+
+Run the command `sudo apt-get install libsdl2-dev` to install it
+
+### Windows 
+
+Not sure how to get this running on a Windows system. Feel free to contrubite to this section if you can.
 
 ## Getting Started
 
@@ -16,7 +24,7 @@ Must have `sdl2-dev` installed
 
 3. Run the command `stack build`
 
-4. Run the command `stack exec <executable name>`
+4. Run the command `stack exec game-of-life`
 
 ## How to Play
 
