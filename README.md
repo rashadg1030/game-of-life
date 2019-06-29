@@ -6,6 +6,8 @@ Play conway's Game Life.
 
 Must have `stack` installed
 
+Must have `sdl2-dev` installed
+
 ## Getting Started
 
 1. Clone the repository
