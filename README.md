@@ -1,6 +1,6 @@
 # game-of-life
 
-Play conway's Game Life. 
+Play Conway's Game Life. 
 
 ## Prerequisites
 
