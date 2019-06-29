@@ -3,7 +3,7 @@
 module Cell where
 import qualified Data.Map as Map
 
-data Cell = Cursor | Alive | Dead
+data Cell = Alive | Dead
   deriving (Show, Eq)
 
 type Grid = Map.Map (Int, Int) Cell
@@ -71,7 +71,6 @@ updateCell :: (Int, Int) -> Grid -> (Int, Int) -> Cell -> Cell
 updateCell bounds grid loc cell = case cell of
                                     Alive  -> updateLiveCell bounds grid loc cell 
                                     Dead   -> updateDeadCell bounds grid loc cell
-                                    Cursor -> Dead
 
 -- mapWithKey :: (k -> a -> b) -> Map k a -> Map k b
 -- Updates the grid 

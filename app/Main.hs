@@ -20,7 +20,6 @@ classic = Classic
     , tilePixelSize = 8
     , backgroundColor = Black2
     , setupFn = return $ GameState { isPlaying = False
-                                   , isEditing = True
                                    , grid = C.rPen (sides, sides) 
                                    , cursor = (0, 0)
                                    }
@@ -33,7 +32,6 @@ classic = Classic
 
 
 data GameState = GameState { isPlaying :: Bool
-                           , isEditing :: Bool 
                            , grid      :: C.Grid
                            , cursor    :: (Int, Int) 
                            }
@@ -41,15 +39,12 @@ data GameState = GameState { isPlaying :: Bool
 sides :: Int
 sides = 128
 
-insertCell :: (Int, Int) -> C.Cell -> C.Grid -> C.Grid
-insertCell = insert
-
 editing :: Input -> GameState -> GameState
 editing Input{..} gameState@GameState{..} 
-  | lookupKey keys Escape == Pressed    = gameState { isEditing = not isEditing }
-  | lookupKey keys Enter == Pressed     = gameState { grid = insertCell cursor C.Alive  grid }
-  | lookupKey keys Backspace == Pressed = gameState { grid = insertCell cursor C.Dead  grid } 
-  | otherwise                           = gameState { cursor = (x', y') }
+  | (lookupKey keys $ Char ' ') == Pressed = gameState { isPlaying = not isPlaying }
+  | lookupKey keys Enter == Pressed        = gameState { grid = insert cursor C.Alive  grid }
+  | lookupKey keys Backspace == Pressed    = gameState { grid = insert cursor C.Dead  grid } 
+  | otherwise                              = gameState { cursor = (x', y') }
   where
     x = fst cursor
     y = snd cursor
@@ -63,21 +58,24 @@ editing Input{..} gameState@GameState{..}
       | otherwise = y
 
 playing :: Input -> GameState -> GameState
-playing Input{keys} g = undefined
-
-
-paused :: Input -> GameState -> GameState
-paused Input{keys} g = undefined
+playing Input{..} gameState@GameState{..}
+  | (lookupKey keys $ Char ' ') == Pressed = gameState { isPlaying = not isPlaying }
+  | otherwise                              = gameState { grid = C.tick (sides, sides) grid }
 
 update :: Input -> GameState -> IO GameState
 update input gameState@GameState{..} = return $ case isPlaying of
-    True  -> editing input gameState
-    False -> undefined
+  True  -> playing input gameState
+  False -> editing input gameState
 
 cellToTile :: C.Cell -> Tile
 cellToTile C.Alive  = Tile Nothing Nothing (Just wh0)
 cellToTile C.Dead   = Tile Nothing Nothing Nothing
-cellToTile C.Cursor = Tile Nothing (Just (Square, wh0)) Nothing 
 
 tileMap :: GameState -> Map (Int, Int) Tile
-tileMap gs = Map.map cellToTile $ grid gs  
+tileMap gameState@GameState{..} = case isPlaying of 
+  True  -> tileGrid  
+  False -> mergeTiles tileGrid cursorGrid 
+  where 
+    tileGrid   = Map.map cellToTile grid   
+    cursorTile = Tile Nothing (Just (Square, rd0)) Nothing
+    cursorGrid = Map.fromList [(cursor, cursorTile)]
