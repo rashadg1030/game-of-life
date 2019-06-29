@@ -36,11 +36,11 @@ data GameState = GameState { isPlaying :: Bool
                            }
 
 sides :: Int
-sides = 128
+sides = 64
 
 editing :: Input -> GameState -> GameState
 editing Input{..} gameState@GameState{..} 
-  | (lookupKey keys $ Char ' ') == Pressed = gameState { isPlaying = not isPlaying }
+  | lookupKey keys Tab == Pressed = gameState { isPlaying = not isPlaying }
   | lookupKey keys Enter == Pressed        = gameState { grid = insert cursor C.Alive  grid }
   | lookupKey keys Backspace == Pressed    = gameState { grid = insert cursor C.Dead  grid } 
   | otherwise                              = gameState { cursor = (x', y') }
@@ -58,7 +58,7 @@ editing Input{..} gameState@GameState{..}
 
 playing :: Input -> GameState -> GameState
 playing Input{..} gameState@GameState{..}
-  | (lookupKey keys $ Char ' ') == Pressed = gameState { isPlaying = not isPlaying }
+  | lookupKey keys Tab == Pressed = gameState { isPlaying = not isPlaying }
   | otherwise                              = gameState { grid = C.tick (sides, sides) grid }
 
 update :: Input -> GameState -> IO GameState

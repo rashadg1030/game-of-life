@@ -20,7 +20,7 @@ Must have `sdl2-dev` installed
 
 ## How to Play
 
-Use `Spacebar` to play or pause the simulation.
+Use `Tab` to play or pause the simulation.
 
 When the simulation is paused, you can edit the grid.
 
