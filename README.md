@@ -4,6 +4,8 @@ Play Conway's Game Life.
 
 ## Prerequisites
 
+Must have `ghc` installed. Instructions [here](https://downloads.haskell.org/~ghc/6.8.3/docs/html/users_guide/installing-bin-distrib.html)
+
 Must have `stack` installed
 
 Run the command `curl -sSL https://get.haskellstack.org/ | sh` to install it
