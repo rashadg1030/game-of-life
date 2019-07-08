@@ -1,5 +1,7 @@
 # game-of-life
 
+![game-of-life logo](https://user-images.githubusercontent.com/52359514/60774904-1617e680-a0e9-11e9-9898-f9a950514874.png)
+
 Play Conway's Game Life. 
 
 ## Prerequisites
