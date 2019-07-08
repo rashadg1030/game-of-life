@@ -2,7 +2,7 @@
 
 ![game-of-life logo](https://user-images.githubusercontent.com/52359514/60774904-1617e680-a0e9-11e9-9898-f9a950514874.png)
 
-Play Conway's Game of Life. 
+Play [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). 
 
 ## Prerequisites
 
